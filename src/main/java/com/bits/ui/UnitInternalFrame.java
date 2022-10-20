@@ -5,6 +5,8 @@
 package com.bits.ui;
 
 import com.bits.Unit;
+import com.bits.services.UnitService;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,6 +21,8 @@ public class UnitInternalFrame extends javax.swing.JInternalFrame {
      */
     public UnitInternalFrame() {
         model = new UnitTableModel();
+        UnitService service = new UnitService();
+        model.units = service.getAll();
         initComponents();
     }
 
@@ -102,7 +106,12 @@ public class UnitInternalFrame extends javax.swing.JInternalFrame {
         if (codeField.getText().equals("") || nameField.getText().equals("")) {
             JOptionPane.showMessageDialog(this, "Both code and name are required!");
         } else {
+            UnitService service = new UnitService();
             Unit unit = new Unit(codeField.getText(), nameField.getText());
+            try {
+                service.save(unit);
+            } catch (IOException ex) {
+            }
             model.units.add(unit);
             model.fireTableDataChanged();
             codeField.setText("");

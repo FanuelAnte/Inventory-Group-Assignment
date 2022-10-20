@@ -4,11 +4,13 @@
  */
 package com.bits;
 
+import java.io.Serializable;
+
 /**
  *
  * @author henock
  */
-public class Product {
+public class Product implements Serializable {
     private String code;
     private String name;
     private float unitPrice;

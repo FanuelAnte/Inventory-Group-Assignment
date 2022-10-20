@@ -3,12 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.bits;
+import java.io.Serializable;
 import java.util.ArrayList;
 /**
  *
  * @author henock
  */
-public class Lookup {
+public class Lookup implements Serializable {
     private String code;
     private String name;
     

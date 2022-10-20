@@ -6,6 +6,7 @@ package com.bits.ui;
 
 import com.bits.Unit;
 import com.bits.Util;
+import com.bits.services.UnitService;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Map;
@@ -68,5 +69,8 @@ public class UnitTableModel extends AbstractTableModel {
         Util.callMethod(method, units.get(rowIndex), aValue);
 
         fireTableCellUpdated(rowIndex, columnIndex);
+        
+        UnitService service = new UnitService();
+        service.writeAll(units);
     }
 }

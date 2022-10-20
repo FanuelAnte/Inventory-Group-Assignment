@@ -4,6 +4,7 @@
  */
 package com.bits;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,7 +12,7 @@ import java.util.Arrays;
  *
  * @author henock
  */
-public class Unit extends Lookup {
+public class Unit extends Lookup implements Serializable {
     public Unit() {
     }
     
