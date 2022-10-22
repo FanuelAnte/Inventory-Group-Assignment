@@ -5,6 +5,8 @@
 package com.bits.ui;
 
 import com.bits.ProductGroup;
+import com.bits.services.ProductGroupService;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,6 +21,8 @@ public class ProductGroupInternalFrame extends javax.swing.JInternalFrame {
      */
     public ProductGroupInternalFrame() {
         model = new ProductGroupTableModel();
+        ProductGroupService service = new ProductGroupService();
+        model.productGroups = service.getAll();
         initComponents();
     }
 
@@ -101,11 +105,17 @@ public class ProductGroupInternalFrame extends javax.swing.JInternalFrame {
        if (codeInputField.getText().equals("") || nameInputField.getText().equals("")) {
             JOptionPane.showMessageDialog(this, "Both code and name are required!");
         } else {
-            ProductGroup productGroup = new ProductGroup(codeInputField.getText(), nameInputField.getText());
-            model.productGroups.add(productGroup);
-            model.fireTableDataChanged();
-            codeInputField.setText("");
-            nameInputField.setText("");
+           ProductGroupService service = new ProductGroupService();
+           ProductGroup productGroup = new ProductGroup(codeInputField.getText(), nameInputField.getText());
+           
+           try {
+               service.save(productGroup);
+           } catch (IOException ex) {
+           }
+           model.productGroups.add(productGroup);
+           model.fireTableDataChanged();
+           codeInputField.setText("");
+           nameInputField.setText("");
         }
     }//GEN-LAST:event_saveButonActionPerformed
 

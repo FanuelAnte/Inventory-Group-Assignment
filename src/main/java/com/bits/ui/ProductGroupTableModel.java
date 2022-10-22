@@ -6,6 +6,7 @@ package com.bits.ui;
 
 import com.bits.ProductGroup;
 import com.bits.Util;
+import com.bits.services.ProductGroupService;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +70,9 @@ public class ProductGroupTableModel extends AbstractTableModel {
         Util.callMethod(method, productGroups.get(rowIndex), aValue);
 
         fireTableCellUpdated(rowIndex, columnIndex);
+        
+        ProductGroupService service = new ProductGroupService();
+        service.writeAll(productGroups);
         
     }
     
