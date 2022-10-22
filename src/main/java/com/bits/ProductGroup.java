@@ -34,4 +34,9 @@ public class ProductGroup extends Lookup implements Serializable {
     public static ProductGroup getByCode(String code) {
         return (ProductGroup) Lookup.getByCode(ProductGroup.getProductGroups(), code);
     }
+    
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

@@ -4,18 +4,24 @@
  */
 package com.bits.ui;
 
+import com.bits.Product;
 import com.bits.ProductGroup;
 import com.bits.Unit;
 import com.bits.services.ProductGroupService;
+import com.bits.services.ProductService;
 import com.bits.services.UnitService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author user
  */
 public class ProductInternalFrame extends javax.swing.JInternalFrame {
+    ProductTableModel model;
+    
     UnitTableModel unitModel;
     ProductGroupTableModel productGroupModel;
     
@@ -26,14 +32,17 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
      * Creates new form ProductInternalFrame
      */
     public ProductInternalFrame() {
+        model = new ProductTableModel();
         unitModel = new UnitTableModel();
         productGroupModel = new ProductGroupTableModel();
         
+        ProductService productService = new ProductService();
         UnitService unitService = new UnitService();
-        ProductGroupService productService = new ProductGroupService();
+        ProductGroupService productGroupService = new ProductGroupService();
         
+        model.products = productService.getAll();
         unitModel.units = unitService.getAll();
-        productGroupModel.productGroups = productService.getAll();
+        productGroupModel.productGroups = productGroupService.getAll();
         
         unitsList = unitModel.units;
         productGroupsList = productGroupModel.productGroups;
@@ -42,11 +51,11 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
         initComponents();
         
         for (Unit unit: unitsList) {
-            unitComboList.addItem(unit.getName());
+            unitComboList.addItem(unit);
         }
         
         for (ProductGroup productGroup: productGroupsList) {
-            productGroupComboList.addItem(productGroup.getName());
+            productGroupComboList.addItem(productGroup);
         }
     }
 
@@ -69,11 +78,11 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
         productGroupComboList = new javax.swing.JComboBox<>();
         codeInputField = new javax.swing.JTextField();
         nameInputField = new javax.swing.JTextField();
-        unitPriceInputField = new javax.swing.JTextField();
-        quantityInputField = new javax.swing.JTextField();
         saveButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         productTable = new javax.swing.JTable();
+        unitPriceInputField = new javax.swing.JTextField();
+        quantityInputField = new javax.swing.JTextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -92,18 +101,13 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
         jLabel6.setText("Product Group");
 
         saveButton.setText("Add Product");
-
-        productTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {},
-                {},
-                {},
-                {}
-            },
-            new String [] {
-
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
             }
-        ));
+        });
+
+        productTable.setModel(model);
         jScrollPane1.setViewportView(productTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -112,8 +116,8 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -122,10 +126,10 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(codeInputField)
+                            .addComponent(codeInputField, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
                             .addComponent(nameInputField)
                             .addComponent(unitPriceInputField)
-                            .addComponent(quantityInputField, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
+                            .addComponent(quantityInputField))
                         .addGap(32, 32, 32)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -137,7 +141,7 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
                                     .addComponent(unitComboList, 0, 115, Short.MAX_VALUE)
                                     .addComponent(productGroupComboList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addComponent(saveButton))))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,8 +165,8 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(quantityInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(saveButton))
+                    .addComponent(saveButton)
+                    .addComponent(quantityInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(25, Short.MAX_VALUE))
@@ -170,6 +174,40 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        if (
+                codeInputField.getText().equals("") || 
+                nameInputField.getText().equals("") ||
+                unitPriceInputField.getText().equals("") ||
+                quantityInputField.getText().equals("")
+                ) {
+            JOptionPane.showMessageDialog(this, "Please fill all the required fields!");
+        } else {
+            
+            ProductService productService = new ProductService();
+            Product product = new Product(
+                    codeInputField.getText(), 
+                    nameInputField.getText(),
+                    Float.parseFloat(unitPriceInputField.getText()),
+                    Float.parseFloat(quantityInputField.getText()),
+                    (Unit) unitComboList.getSelectedItem(),
+                    (ProductGroup) productGroupComboList.getSelectedItem()
+            );
+            
+            try {
+                productService.save(product);
+            } catch (IOException ex) {
+            }
+            
+            model.products.add(product);
+            model.fireTableDataChanged();
+            codeInputField.setText("");
+            nameInputField.setText("");
+            unitPriceInputField.setText("");
+            quantityInputField.setText("");
+        }
+    }//GEN-LAST:event_saveButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -182,11 +220,11 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nameInputField;
-    private javax.swing.JComboBox<String> productGroupComboList;
+    private javax.swing.JComboBox<ProductGroup> productGroupComboList;
     private javax.swing.JTable productTable;
     private javax.swing.JTextField quantityInputField;
     private javax.swing.JButton saveButton;
-    private javax.swing.JComboBox<String> unitComboList;
+    private javax.swing.JComboBox<Unit> unitComboList;
     private javax.swing.JTextField unitPriceInputField;
     // End of variables declaration//GEN-END:variables
 }

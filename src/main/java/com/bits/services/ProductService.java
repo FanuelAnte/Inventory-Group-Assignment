@@ -4,6 +4,7 @@
  */
 package com.bits.services;
 
+import com.bits.Product;
 import com.bits.Unit;
 import com.bits.base.AppendableObjectOutputStream;
 import java.io.File;
@@ -17,25 +18,25 @@ import java.util.List;
 
 /**
  *
- * @author henock
+ * @author user
  */
-public class UnitService {
-    private final String filename = "units.obj";
+public class ProductService {
+    private final String fileName = "products.obj";
     
-    public void save(Unit unit) throws IOException {
-        File f = new File(filename);
+    public void save(Product product) throws IOException {
+        File f = new File(fileName);
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
             if (f.exists()) {
-                fos = new FileOutputStream(filename, true);
+                fos = new FileOutputStream(fileName, true);
                 oos = new AppendableObjectOutputStream(fos);
             } else {
-                fos = new FileOutputStream(filename);
+                fos = new FileOutputStream(fileName);
                 oos = new ObjectOutputStream(fos);
             }
             
-            oos.writeObject(unit);
+            oos.writeObject(product);
 
             oos.close();
             fos.close();
@@ -49,19 +50,20 @@ public class UnitService {
         }
     }
     
-    public ArrayList<Unit> getAll() {
+    
+    public ArrayList<Product> getAll() {
         boolean eof = false;
-        ArrayList<Unit> data = new ArrayList<>(); 
+        ArrayList<Product> data = new ArrayList<>(); 
 
         try (
-            FileInputStream fis = new FileInputStream(filename);
+            FileInputStream fis = new FileInputStream(fileName);
             ObjectInputStream ois = new ObjectInputStream(fis)) {
-            Unit unit;
+            Product product;
 
             while (!eof) {
-                unit = (Unit)ois.readObject();
-                if (unit != null) {
-                    data.add(unit);
+                product = (Product)ois.readObject();
+                if (product != null) {
+                    data.add(product);
                 } else {
                     eof = true;
                 }
@@ -73,16 +75,17 @@ public class UnitService {
         }
     }
     
-    public void writeAll(List<Unit> units) {
+    public void writeAll(List<Product> products) {
         try {
-            try (FileOutputStream fos = new FileOutputStream(filename);
+            try (FileOutputStream fos = new FileOutputStream(fileName);
                  ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                for (Unit unit: units) {
-                    oos.writeObject(unit);
+                for (Product product: products) {
+                    oos.writeObject(product);
                 }
             }
         } catch (IOException ex) {
             
         }
     }
+    
 }

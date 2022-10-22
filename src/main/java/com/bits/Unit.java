@@ -34,4 +34,9 @@ public class Unit extends Lookup implements Serializable {
         };
         return new ArrayList<>(Arrays.asList(units));
     }
+    
+    @Override
+    public String toString() {
+        return getName();
+    }
 }
