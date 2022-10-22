@@ -109,7 +109,9 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void pGroupMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pGroupMenuItemActionPerformed
-        // TODO add your handling code here:
+        JInternalFrame frame = new ProductGroupInternalFrame();
+        frame.setVisible(true);
+        this.jDesktopPane1.add(frame);
     }//GEN-LAST:event_pGroupMenuItemActionPerformed
 
     private void unitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unitMenuItemActionPerformed
