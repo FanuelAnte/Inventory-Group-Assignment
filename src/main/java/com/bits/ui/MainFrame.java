@@ -55,7 +55,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         setupMenu.setText("Setup");
 
-        unitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.META_DOWN_MASK));
+        unitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         unitMenuItem.setText("Units ...");
         unitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -64,7 +64,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         setupMenu.add(unitMenuItem);
 
-        pGroupMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.META_DOWN_MASK));
+        pGroupMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         pGroupMenuItem.setText("Product Groups ...");
         pGroupMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -73,8 +73,13 @@ public class MainFrame extends javax.swing.JFrame {
         });
         setupMenu.add(pGroupMenuItem);
 
-        productsMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.META_DOWN_MASK));
+        productsMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         productsMenuItem.setText("Products ...");
+        productsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                productsMenuItemActionPerformed(evt);
+            }
+        });
         setupMenu.add(productsMenuItem);
 
         jMenuBar1.add(setupMenu);
@@ -119,6 +124,12 @@ public class MainFrame extends javax.swing.JFrame {
         frame.setVisible(true);
         this.jDesktopPane1.add(frame);
     }//GEN-LAST:event_unitMenuItemActionPerformed
+
+    private void productsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsMenuItemActionPerformed
+        JInternalFrame frame = new ProductInternalFrame();
+        frame.setVisible(true);
+        this.jDesktopPane1.add(frame);
+    }//GEN-LAST:event_productsMenuItemActionPerformed
 
     /**
      * @param args the command line arguments

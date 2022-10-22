@@ -10,9 +10,7 @@ import java.io.Serializable;
  *
  * @author henock
  */
-public class Product implements Serializable {
-    private String code;
-    private String name;
+public class Product extends Lookup implements Serializable {
     private float unitPrice;
     private float quantity;
     private Unit unit;
@@ -29,11 +27,10 @@ public class Product implements Serializable {
         Unit unit,
         ProductGroup productGroup
     ) {
+        super(code, name);
         String error = null;
         
-        if (!Util.validateLength(code, 3)) {
-            error = String.format("The code %s is invalid", code);
-        } else if (!Util.validatePositive(unitPrice)) {
+        if (!Util.validatePositive(unitPrice)) {
             error = String.format("The price %f is invalid", unitPrice);
         } else if (!Util.validatePositive(quantity)) {
             error = String.format("The quantity %f is invalid.", quantity);
@@ -42,8 +39,6 @@ public class Product implements Serializable {
         if (error != null) {
             throw new IllegalArgumentException(error);
         } else {
-            this.code = code;
-            this.name = name;
             this.unitPrice = unitPrice;
             this.quantity = quantity;
             this.unit = unit;
@@ -51,38 +46,7 @@ public class Product implements Serializable {
         }
     }
 
-    /**
-     * @return the code
-     */
-    public String getCode() {
-        return code;
-    }
-
-    /**
-     * @param code the code to set
-     */
-    public void setCode(String code) {
-        if (Util.validateLength(code, 3)) {
-            this.code = code;
-        } else {
-            throw new IllegalArgumentException(String.format("The code %s is invalid.", code));
-        }
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    
     /**
      * @return the unitPrice
      */
