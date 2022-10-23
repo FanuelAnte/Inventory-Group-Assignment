@@ -182,7 +182,7 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
                 unitPriceInputField.getText().equals("") ||
                 quantityInputField.getText().equals("")
                 ) {
-            JOptionPane.showMessageDialog(this, "Please fill all the required fields!");
+            JOptionPane.showMessageDialog(this, "Please fill in all the required fields!");
         } else {
             
             ProductService productService = new ProductService();
