@@ -183,7 +183,12 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
                 quantityInputField.getText().equals("")
                 ) {
             JOptionPane.showMessageDialog(this, "Please fill in all the required fields!");
-        } else {
+        }
+        else if (codeInputField.getText().length()!=3){
+            JOptionPane.showMessageDialog(this, "Code should only contain 3 digits");
+        }
+        
+            else {
             
             ProductService productService = new ProductService();
             Product product = new Product(

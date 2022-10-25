@@ -57,6 +57,11 @@ public class ProductGroupInternalFrame extends javax.swing.JInternalFrame {
                 saveButonActionPerformed(evt);
             }
         });
+        saveButon.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                saveButonKeyPressed(evt);
+            }
+        });
 
         productGroupTable.setModel(model);
         jScrollPane1.setViewportView(productGroupTable);
@@ -104,9 +109,18 @@ public class ProductGroupInternalFrame extends javax.swing.JInternalFrame {
     private void saveButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButonActionPerformed
        if (codeInputField.getText().equals("") || nameInputField.getText().equals("")) {
             JOptionPane.showMessageDialog(this, "Both code and name are required!");
-        } else {
-           ProductGroupService service = new ProductGroupService();
-           ProductGroup productGroup = new ProductGroup(codeInputField.getText(), nameInputField.getText());
+            
+         
+            
+        } else if (codeInputField.getText().length()!=3){
+                JOptionPane.showMessageDialog(this, "Code should only contain 3 digits");
+                System.out.println("I'm here");
+        }
+            else {
+                ProductGroupService service = new ProductGroupService();
+                ProductGroup productGroup = new ProductGroup(codeInputField.getText(), nameInputField.getText());
+         
+        
            
            try {
                service.save(productGroup);
@@ -119,7 +133,10 @@ public class ProductGroupInternalFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_saveButonActionPerformed
 
-
+    private void saveButonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_saveButonKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_saveButonKeyPressed
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField codeInputField;
     private javax.swing.JLabel jLabel1;
