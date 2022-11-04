@@ -14,15 +14,26 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
 /**
  *
  * @author user
  */
-public class ProductGroupService {
+public class ProductGroupService  {
     private final String fileName = "productGroups.obj";
     
     public void save(ProductGroup productGroup) throws IOException {
+        String sql = String.format(
+        "INSERT INTO product_group(code, name) VALUES('%s', '%s')", product_group.getCode(), product_group.getName());
+        DatabseService service = new DatabseService();
+        service.execute(sql);
+    }       
+        /*
         File f = new File(fileName);
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
@@ -49,42 +60,54 @@ public class ProductGroupService {
             }
         }
     }
-    
+    */
     public ArrayList<ProductGroup> getAll() {
-        boolean eof = false;
         ArrayList<ProductGroup> data = new ArrayList<>(); 
-
-        try (FileInputStream fis = new FileInputStream(fileName);
-            ObjectInputStream ois = new ObjectInputStream(fis)) {
-            ProductGroup productGroup;
-
-            while (!eof) {
-                productGroup = (ProductGroup)ois.readObject();
-                if (productGroup != null) {
-                    data.add(productGroup);
-                } else {
-                    eof = true;
-                }
+        String sql = "SELECT * FROM product_group ORDER BY id";
+        DatabseService service = new DatabseService();
+        try (
+               Connection conn = service.connect();
+               Statement stmt = conn.createStatement();
+               ResultSet rs = stmt.executeQuery(sql)
+                ){
+            while(rs.next()) {
+                data.add(
+                new ProductGroup(
+                rs.getInt("id"),
+                rs.getString("code"),
+                rs.getString("name")
+                )  
+                );
             }
-        } catch (IOException ex) {
-//            ex.printStackTrace();
-        } finally {
-            return data;
-        }
+                return data;
+            } catch(SQLException ex) {
+                ex.printStackTrace();
+            }
+        return data;
     }
     
+    public void update(ProductGroup product_group, String column, String value) {
+        String sql = String.format(
+        "UPDATE product_group SET %s='%s' WHERE id=%d",
+                column,
+                value,
+                product_group.getId()
+        );
+        DatabseService service = new DatabseService();
+        service.execute(sql);
+    }
+        
+        
     public void writeAll(List<ProductGroup> productGroups) {
-        try {
-            try (FileOutputStream fos = new FileOutputStream(fileName);
-                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                
-                for (ProductGroup productGroup: productGroups) {
-                    oos.writeObject(productGroup);
-                }
-                
-            }
-        } catch (IOException ex) {
-            
-        }
+       String values = "";
+       for (ProductGroup product_group: productGroups) {
+           if (!values.equals("")) {
+               values += ",";
+           }
+           values += String.format("('%s', '%s')", product_group.getCode(), product_group.getName());
+       }   
+       String sql = String.format("INSERT INTO product_group(code, name) VALUES %s;", values);
+       DatabseService service = new DatabseService();
+       service.execute(sql);
     }
 }
