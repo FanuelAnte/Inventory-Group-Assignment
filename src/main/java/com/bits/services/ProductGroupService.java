@@ -25,7 +25,7 @@ import java.sql.Statement;
  * @author user
  */
 public class ProductGroupService  {
-    private final String fileName = "productGroups.obj";
+    //private final String fileName = "productGroups.obj";
     
     public void save(ProductGroup productGroup) throws IOException {
         String sql = String.format(

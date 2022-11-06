@@ -46,6 +46,10 @@ public class Product extends Lookup implements Serializable {
         }
     }
 
+    public Product(int aInt, String string, String string0, float aFloat, float aFloat0, Object object, Object object0) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     
     /**
      * @return the unitPrice
