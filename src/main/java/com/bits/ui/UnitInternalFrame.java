@@ -111,7 +111,7 @@ public class UnitInternalFrame extends javax.swing.JInternalFrame {
                 service.save(unit);
             } catch (IOException ex) {
             }
-            model.units.add(unit);
+            model.units = service.getAll();
             model.fireTableDataChanged();
             codeField.setText("");
             nameField.setText("");

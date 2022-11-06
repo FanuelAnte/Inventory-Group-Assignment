@@ -19,6 +19,10 @@ public class ProductGroup extends Lookup implements Serializable {
     public ProductGroup(String code, String name) {
         super(code, name);
     }
+    
+    public ProductGroup(int id, String code, String name) {
+        super(id, code, name);
+    }
 
     public static ArrayList<ProductGroup> getProductGroups() {
         ProductGroup[] groups = {

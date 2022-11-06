@@ -112,7 +112,7 @@ public class ProductGroupInternalFrame extends javax.swing.JInternalFrame {
                service.save(productGroup);
            } catch (IOException ex) {
            }
-           model.productGroups.add(productGroup);
+           model.productGroups = service.getAll();
            model.fireTableDataChanged();
            codeInputField.setText("");
            nameInputField.setText("");

@@ -9,7 +9,8 @@ import java.util.ArrayList;
  *
  * @author henock
  */
-public class Lookup implements Serializable {
+public class Lookup implements Serializable {    
+    private int id;
     private String code;
     private String name;
     
@@ -24,6 +25,11 @@ public class Lookup implements Serializable {
             String error = String.format("The code %s is invalid.", code);
             throw new IllegalArgumentException(error);
         }
+    }
+    
+    public Lookup(int id, String code, String name) {
+        this(code, name);
+        this.id = id;
     }
     
     public static Lookup getByCode(ArrayList<? extends Lookup> items, String code) {
@@ -65,5 +71,18 @@ public class Lookup implements Serializable {
         this.name = name;
     }
     
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
     
 }

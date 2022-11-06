@@ -20,6 +20,10 @@ public class Unit extends Lookup implements Serializable {
         super(code, name);
     }
     
+    public Unit(int id, String code, String name) {
+        super(id, code, name);
+    }
+    
     public static Unit getByCode(String code) {
         return (Unit) Lookup.getByCode(Unit.getUnits(), code);
     }

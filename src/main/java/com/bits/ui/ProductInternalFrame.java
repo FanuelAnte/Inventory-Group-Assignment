@@ -200,7 +200,7 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
             } catch (IOException ex) {
             }
             
-            model.products.add(product);
+            model.products = productService.getAll();
             model.fireTableDataChanged();
             codeInputField.setText("");
             nameInputField.setText("");

@@ -12,6 +12,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,71 +24,60 @@ import java.util.List;
  * @author user
  */
 public class ProductGroupService {
-    private final String fileName = "productGroups.obj";
-    
     public void save(ProductGroup productGroup) throws IOException {
-        File f = new File(fileName);
-        FileOutputStream fos = null;
-        ObjectOutputStream oos = null;
-        
-        try {
-            if (f.exists()) {
-                fos = new FileOutputStream(fileName, true);
-                oos = new AppendableObjectOutputStream(fos);
-            } else {
-                fos = new FileOutputStream(fileName);
-                oos = new ObjectOutputStream(fos);
-            }
-            
-            oos.writeObject(productGroup);
-
-            oos.close();
-            fos.close();
-        } finally {
-            if (oos != null) {
-                oos.close();
-            }
-            if (fos != null) {
-                fos.close();
-            }
-        }
+        String sql = String.format(
+            "INSERT INTO product_group(code, name) VALUES('%s', '%s')", productGroup.getCode(), productGroup.getName()
+        );
+        DatabaseService service = new DatabaseService();
+        service.execute(sql);
     }
     
     public ArrayList<ProductGroup> getAll() {
-        boolean eof = false;
-        ArrayList<ProductGroup> data = new ArrayList<>(); 
-
-        try (FileInputStream fis = new FileInputStream(fileName);
-            ObjectInputStream ois = new ObjectInputStream(fis)) {
-            ProductGroup productGroup;
-
-            while (!eof) {
-                productGroup = (ProductGroup)ois.readObject();
-                if (productGroup != null) {
-                    data.add(productGroup);
-                } else {
-                    eof = true;
-                }
+        ArrayList<ProductGroup> data = new ArrayList<>();
+        String sql = "SELECT * FROM product_group ORDER BY id";
+        DatabaseService service = new DatabaseService();
+        try (
+            Connection conn = service.connect();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)
+        ){
+            while (rs.next()) {
+                data.add(
+                    new ProductGroup(
+                        rs.getInt("id"),
+                        rs.getString("code"),
+                        rs.getString("name")
+                    )
+                );
             }
-        } catch (IOException ex) {
-//            ex.printStackTrace();
-        } finally {
             return data;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
+        return data;
+    }
+    
+    public void update(ProductGroup productGroup, String column, String value) {
+        String sql = String.format(
+            "UPDATE product_group SET %s='%s' WHERE id=%d",
+            column,
+            value,
+            productGroup.getId()
+        );
+        DatabaseService service = new DatabaseService();
+        service.execute(sql);
     }
     
     public void writeAll(List<ProductGroup> productGroups) {
-        try {
-            try (FileOutputStream fos = new FileOutputStream(fileName);
-                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                
-                for (ProductGroup productGroup: productGroups) {
-                    oos.writeObject(productGroup);
-                }
-                
+        String values = "";
+        for (ProductGroup productGroup: productGroups) {
+            if (!values.equals("")) {
+                values += ",";
             }
-        } catch (IOException ex) {
-            
+            values += String.format("('%s', '%s')", productGroup.getCode(), productGroup.getName());
         }
+        String sql = String.format("INSERT INTO product_group(code, name) VALUES %s;", values);
+        DatabaseService service = new DatabaseService();
+        service.execute(sql);
     }
 }

@@ -11,12 +11,41 @@ import java.io.Serializable;
  * @author henock
  */
 public class Product extends Lookup implements Serializable {
+    private int id;
     private float unitPrice;
     private float quantity;
     private Unit unit;
     private ProductGroup productGroup;
     
     public Product() {
+    }
+    
+    public Product(
+        int id,
+        String code,
+        String name,
+        float unitPrice,
+        float quantity,
+        Unit unit,
+        ProductGroup productGroup
+    ) {
+        super(id, code, name);
+        String error = null;
+        
+        if (!Util.validatePositive(unitPrice)) {
+            error = String.format("The price %f is invalid", unitPrice);
+        } else if (!Util.validatePositive(quantity)) {
+            error = String.format("The quantity %f is invalid.", quantity);
+        }
+        
+        if (error != null) {
+            throw new IllegalArgumentException(error);
+        } else {
+            this.unitPrice = unitPrice;
+            this.quantity = quantity;
+            this.unit = unit;
+            this.productGroup = productGroup;
+        }
     }
     
     public Product(

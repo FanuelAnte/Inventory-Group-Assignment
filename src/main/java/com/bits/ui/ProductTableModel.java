@@ -23,6 +23,7 @@ import javax.swing.table.AbstractTableModel;
 public class ProductTableModel extends AbstractTableModel {
     List<Product> products = new ArrayList<>();
     String columnNames[] = {
+        "ID",
         "Code", 
         "Name", 
         "UnitPrice", 
@@ -31,6 +32,7 @@ public class ProductTableModel extends AbstractTableModel {
         "ProductGroup" 
     };
     Class<?> columnClasses[] = {
+        Integer.class,
         String.class, 
         String.class,
         float.class,
@@ -42,12 +44,13 @@ public class ProductTableModel extends AbstractTableModel {
     Map fieldMap = new HashMap();
     
     ProductTableModel() {
-        fieldMap.put(0, "Code");
-        fieldMap.put(1, "Name");
-        fieldMap.put(2, "UnitPrice");
-        fieldMap.put(3, "Quantity");
-        fieldMap.put(4, "Unit");
-        fieldMap.put(5, "ProductGroup");
+        fieldMap.put(0, "Id");
+        fieldMap.put(1, "Code");
+        fieldMap.put(2, "Name");
+        fieldMap.put(3, "UnitPrice");
+        fieldMap.put(4, "Quantity");
+        fieldMap.put(5, "Unit");
+        fieldMap.put(6, "ProductGroup");
     }
     
     @Override
@@ -64,7 +67,8 @@ public class ProductTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         var methodName = String.format("get%s", (String) fieldMap.get(columnIndex));
         Method method = Util.getByMethodName(products.get(rowIndex), methodName);
-        return (Object) Util.callMethod(method, products.get(rowIndex));
+        Object result = Util.callMethod(method, products.get(rowIndex));
+        return result;
     }
     
     @Override
@@ -79,13 +83,15 @@ public class ProductTableModel extends AbstractTableModel {
     
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return true;
+        return columnIndex != 0;
     }
     
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        var methodName = String.format("set%s", (String) fieldMap.get(columnIndex));
-        Method method = Util.getByMethodName(products.get(rowIndex), methodName, String.class);
+        Product product = products.get(rowIndex);
+        String column = (String) fieldMap.get(columnIndex);
+        var methodName = String.format("set%s", column);
+        Method method = Util.getByMethodName(product, methodName, String.class);
         Util.callMethod(method, products.get(rowIndex), aValue);
         
         fireTableCellUpdated(rowIndex, columnIndex);
@@ -93,5 +99,4 @@ public class ProductTableModel extends AbstractTableModel {
         ProductService productService = new ProductService();
         productService.writeAll(products);
     }
-    
 }

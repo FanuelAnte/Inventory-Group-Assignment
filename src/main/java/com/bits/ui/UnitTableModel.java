@@ -19,15 +19,17 @@ import javax.swing.table.AbstractTableModel;
  * @author henock
  */
 public class UnitTableModel extends AbstractTableModel {
+    
     List<Unit> units = new ArrayList<>();
-    String columnNames[] = {"Code", "Name"};
-    Class<?> columnClasses[] = {String.class, String.class};
+    String columnNames[] = {"ID", "Code", "Name"};
+    Class<?> columnClasses[] = {Integer.class, String.class, String.class};
     
     Map fieldMap = new HashMap();
     
     UnitTableModel() {
-        fieldMap.put(0, "Code");
-        fieldMap.put(1, "Name");
+        fieldMap.put(0, "Id");
+        fieldMap.put(1, "Code");
+        fieldMap.put(2, "Name");
     }
     
     @Override
@@ -44,7 +46,8 @@ public class UnitTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         var methodName = String.format("get%s", (String) fieldMap.get(columnIndex));
         Method method = Util.getByMethodName(units.get(rowIndex), methodName);
-        return (String) Util.callMethod(method, units.get(rowIndex));
+        Object result = Util.callMethod(method, units.get(rowIndex));
+        return columnIndex == 0 ? (int) result : (String) result;
     }
     
     @Override
@@ -59,13 +62,15 @@ public class UnitTableModel extends AbstractTableModel {
     
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return true;
+        return columnIndex != 0;
     }
     
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        var methodName = String.format("set%s", (String) fieldMap.get(columnIndex));
-        Method method = Util.getByMethodName(units.get(rowIndex), methodName, String.class);
+        Unit unit = units.get(rowIndex);
+        String column = (String) fieldMap.get(columnIndex);
+        var methodName = String.format("set%s", column);
+        Method method = Util.getByMethodName(unit, methodName, String.class);
         Util.callMethod(method, units.get(rowIndex), aValue);
 
         fireTableCellUpdated(rowIndex, columnIndex);

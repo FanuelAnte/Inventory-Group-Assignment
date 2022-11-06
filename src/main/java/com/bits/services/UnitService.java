@@ -12,6 +12,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,69 +24,61 @@ import java.util.List;
  * @author henock
  */
 public class UnitService {
-    private final String filename = "units.obj";
     
     public void save(Unit unit) throws IOException {
-        File f = new File(filename);
-        FileOutputStream fos = null;
-        ObjectOutputStream oos = null;
-        try {
-            if (f.exists()) {
-                fos = new FileOutputStream(filename, true);
-                oos = new AppendableObjectOutputStream(fos);
-            } else {
-                fos = new FileOutputStream(filename);
-                oos = new ObjectOutputStream(fos);
-            }
-            
-            oos.writeObject(unit);
-
-            oos.close();
-            fos.close();
-        } finally {
-            if (oos != null) {
-                oos.close();
-            }
-            if (fos != null) {
-                fos.close();
-            }
-        }
+        String sql = String.format(
+            "INSERT INTO unit(code, name) VALUES('%s', '%s')", unit.getCode(), unit.getName()
+        );
+        DatabaseService service = new DatabaseService();
+        service.execute(sql);
     }
     
     public ArrayList<Unit> getAll() {
-        boolean eof = false;
-        ArrayList<Unit> data = new ArrayList<>(); 
-
+        ArrayList<Unit> data = new ArrayList<>();
+        String sql = "SELECT * FROM unit ORDER BY id";
+        DatabaseService service = new DatabaseService();
         try (
-            FileInputStream fis = new FileInputStream(filename);
-            ObjectInputStream ois = new ObjectInputStream(fis)) {
-            Unit unit;
-
-            while (!eof) {
-                unit = (Unit)ois.readObject();
-                if (unit != null) {
-                    data.add(unit);
-                } else {
-                    eof = true;
-                }
+            Connection conn = service.connect();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)
+        ){
+            while (rs.next()) {
+                data.add(
+                    new Unit(
+                        rs.getInt("id"),
+                        rs.getString("code"),
+                        rs.getString("name")
+                    )
+                );
             }
-        } catch (IOException ex) {
-//            ex.printStackTrace();
-        } finally {
             return data;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
+        return data;
+    }
+    
+    public void update(Unit unit, String column, String value) {
+        String sql = String.format(
+            "UPDATE unit SET %s='%s' WHERE id=%d",
+            column,
+            value,
+            unit.getId()
+        );
+        DatabaseService service = new DatabaseService();
+        service.execute(sql);
     }
     
     public void writeAll(List<Unit> units) {
-        try {
-            try (FileOutputStream fos = new FileOutputStream(filename);
-                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                for (Unit unit: units) {
-                    oos.writeObject(unit);
-                }
+        String values = "";
+        for (Unit unit: units) {
+            if (!values.equals("")) {
+                values += ",";
             }
-        } catch (IOException ex) {
-            
+            values += String.format("('%s', '%s')", unit.getCode(), unit.getName());
         }
+        String sql = String.format("INSERT INTO unit(code, name) VALUES %s;", values);
+        DatabaseService service = new DatabaseService();
+        service.execute(sql);
     }
 }
