@@ -68,6 +68,13 @@ public class ProductGroupService {
         service.execute(sql);
     }
     
+    public void delete(int id) {
+        String sql = String.format(
+            "DELETE FROM product_group WHERE id='%d'",id);
+        DatabaseService service = new DatabaseService();
+        service.execute(sql);
+    }
+    
     public void writeAll(List<ProductGroup> productGroups) {
         String values = "";
         for (ProductGroup productGroup: productGroups) {

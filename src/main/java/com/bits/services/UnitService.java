@@ -69,6 +69,13 @@ public class UnitService {
         service.execute(sql);
     }
     
+    public void delete(int id) {
+        String sql = String.format(
+            "DELETE FROM unit WHERE id='%d'",id);
+        DatabaseService service = new DatabaseService();
+        service.execute(sql);
+    }
+    
     public void writeAll(List<Unit> units) {
         String values = "";
         for (Unit unit: units) {

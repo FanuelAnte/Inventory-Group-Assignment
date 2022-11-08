@@ -6,6 +6,7 @@ package com.bits.ui;
 
 import com.bits.ProductGroup;
 import com.bits.services.ProductGroupService;
+import com.bits.services.ProductService;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 
@@ -42,6 +43,7 @@ public class ProductGroupInternalFrame extends javax.swing.JInternalFrame {
         saveButon = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         productGroupTable = new javax.swing.JTable();
+        deleteBtn = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -61,6 +63,13 @@ public class ProductGroupInternalFrame extends javax.swing.JInternalFrame {
         productGroupTable.setModel(model);
         jScrollPane1.setViewportView(productGroupTable);
 
+        deleteBtn.setText("Delete");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -78,8 +87,10 @@ public class ProductGroupInternalFrame extends javax.swing.JInternalFrame {
                             .addComponent(nameInputField, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                             .addComponent(codeInputField))
                         .addGap(18, 18, 18)
-                        .addComponent(saveButon)))
-                .addContainerGap(35, Short.MAX_VALUE))
+                        .addComponent(saveButon)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(deleteBtn)))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -92,7 +103,8 @@ public class ProductGroupInternalFrame extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(nameInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(saveButon))
+                    .addComponent(saveButon)
+                    .addComponent(deleteBtn))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(35, Short.MAX_VALUE))
@@ -119,9 +131,21 @@ public class ProductGroupInternalFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_saveButonActionPerformed
 
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+        int row = productGroupTable.getSelectedRow();
+        int value = (int) productGroupTable.getModel().getValueAt(row, 0);
+        
+        
+        ProductGroupService productGroupService = new ProductGroupService();
+        productGroupService.delete(value);
+        model.productGroups = productGroupService.getAll();
+        model.fireTableDataChanged();
+    }//GEN-LAST:event_deleteBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField codeInputField;
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;

@@ -126,6 +126,13 @@ public class ProductService {
         return productGroup;
     }
     
+    public void delete(int id) {
+        String sql = String.format(
+            "DELETE FROM product WHERE id='%d'",id);
+        DatabaseService service = new DatabaseService();
+        service.execute(sql);
+    }
+    
     public void update(Product product, String column, String value) {
         String sql = String.format(
             "UPDATE product SET %s='%s' WHERE id=%d",

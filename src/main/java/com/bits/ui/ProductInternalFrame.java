@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 
 /**
  *
@@ -50,6 +51,8 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
         
         initComponents();
         
+        productTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
         for (Unit unit: unitsList) {
             unitComboList.addItem(unit);
         }
@@ -83,6 +86,7 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
         productTable = new javax.swing.JTable();
         unitPriceInputField = new javax.swing.JTextField();
         quantityInputField = new javax.swing.JTextField();
+        deleteBtn = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -109,6 +113,13 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
 
         productTable.setModel(model);
         jScrollPane1.setViewportView(productTable);
+
+        deleteBtn.setText("Delete");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -140,7 +151,10 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(unitComboList, 0, 115, Short.MAX_VALUE)
                                     .addComponent(productGroupComboList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(saveButton))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(saveButton)
+                                .addGap(30, 30, 30)
+                                .addComponent(deleteBtn)))))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -166,7 +180,8 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(saveButton)
-                    .addComponent(quantityInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(quantityInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteBtn))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(25, Short.MAX_VALUE))
@@ -209,9 +224,20 @@ public class ProductInternalFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+        int row = productTable.getSelectedRow();
+        int value = (int) productTable.getModel().getValueAt(row, 0);
+        
+        ProductService productService = new ProductService();
+        productService.delete(value);
+        model.products = productService.getAll();
+        model.fireTableDataChanged();
+    }//GEN-LAST:event_deleteBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField codeInputField;
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -17,7 +17,7 @@ import java.sql.Statement;
 public class DatabaseService {
     private final String url = "jdbc:postgresql://localhost:5432/inventory";
     private final String user = "postgres";
-    private final String password = "mysecretpassword";
+    private final String password = "mypassword";
     
     public Connection connect() {
         Connection conn = null;
